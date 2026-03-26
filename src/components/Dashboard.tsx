@@ -150,11 +150,19 @@ export default function Dashboard() {
 
       <main className="mx-auto max-w-4xl px-6 py-8">
         {/* Greeting */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">
-            Hey Anna! 👋
-          </h2>
-          <p className="text-gray-500">Here&apos;s your impact this month.</p>
+        <div className="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Hey Anna! 👋
+            </h2>
+            <p className="text-gray-500">Here&apos;s your impact this month.</p>
+          </div>
+          <button
+            onClick={() => setShowImpactCard(true)}
+            className="shrink-0 rounded-xl bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 px-4 py-2 text-sm font-bold text-white shadow-lg transition transform hover:-translate-y-0.5"
+          >
+            Share My Impact 📱
+          </button>
         </div>
 
         {/* Hero CO₂ Card */}
@@ -170,39 +178,19 @@ export default function Dashboard() {
               ℹ️ How?
             </button>
           </div>
-          <div className="text-center mb-6">
+          <div className="text-center">
             <p className="text-7xl font-extrabold text-white mb-2">
               {totalCO2.toFixed(1)}
             </p>
-            <p className="text-3xl font-bold text-white/90">kg CO₂</p>
-          </div>
-          
-          {/* Metrics Grid */}
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
-              <div className="text-2xl mb-1">🌳</div>
-              <div className="text-white font-bold text-lg">{trees.toFixed(1)}</div>
-              <div className="text-white/80 text-xs">trees</div>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
-              <div className="text-2xl mb-1">✈️</div>
-              <div className="text-white font-bold text-lg">{Math.round(totalCO2 / 250)}</div>
-              <div className="text-white/80 text-xs">flights</div>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
-              <div className="text-2xl mb-1">🚴</div>
-              <div className="text-white font-bold text-lg">{monthRides.length}</div>
-              <div className="text-white/80 text-xs">rides</div>
+            <p className="text-3xl font-bold text-white/90 mb-4">kg CO₂</p>
+            
+            {/* Metrics as Text */}
+            <div className="space-y-2 text-white/90 text-lg">
+              <p>= {trees.toFixed(1)} trees planted 🌳</p>
+              <p>= {Math.round(totalCO2 / 250)} flights offset ✈️</p>
+              <p>= {monthRides.length} rides this month 🚴</p>
             </div>
           </div>
-
-          {/* Share Button */}
-          <button
-            onClick={() => setShowImpactCard(true)}
-            className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 px-4 py-3 text-sm font-bold text-white shadow-lg transition transform hover:-translate-y-0.5"
-          >
-            Share My Impact 📱
-          </button>
         </div>
 
         {/* Secondary Stats Grid */}
