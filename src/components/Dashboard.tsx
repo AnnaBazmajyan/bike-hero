@@ -165,99 +165,150 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* Stats Grid */}
-        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {/* CO₂ Card */}
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:col-span-1">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-500">CO₂ Saved</p>
-              <button
-                onClick={() => setShowTransparency(true)}
-                className="text-xs text-gray-400 transition hover:text-green-600"
-                title="How is this calculated?"
-                aria-label="How is this calculated?"
-              >
-                ℹ️ How?
-              </button>
-            </div>
-            <p className="mt-1 text-4xl font-extrabold text-green-600">
-              {totalCO2.toFixed(2)}
-            </p>
-            <p className="text-lg font-semibold text-green-500">kg</p>
-            <p className="mt-1 text-xs text-gray-400">this month</p>
+        {/* Hero CO₂ Card */}
+        <div className="mb-6 rounded-3xl bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 p-8 shadow-xl">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm font-medium text-white/90">CO₂ Saved This Month</p>
+            <button
+              onClick={() => setShowTransparency(true)}
+              className="text-xs text-white/70 transition hover:text-white"
+              title="How is this calculated?"
+              aria-label="How is this calculated?"
+            >
+              ℹ️ How?
+            </button>
           </div>
-
-          {/* Trees Card */}
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-            <p className="text-sm font-medium text-gray-500">Tree Equivalent</p>
-            <p className="mt-1 text-4xl font-extrabold text-emerald-600">
-              {trees.toFixed(2)}
+          <div className="text-center">
+            <p className="text-7xl font-extrabold text-white mb-2">
+              {totalCO2.toFixed(1)}
             </p>
-            <p className="text-lg font-semibold text-emerald-500">🌳</p>
-            <p className="mt-1 text-xs text-gray-400">trees worth of CO₂</p>
-          </div>
-
-          {/* Streak Card */}
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-            <p className="text-sm font-medium text-gray-500">Current Streak</p>
-            <p className="mt-1 text-4xl font-extrabold text-orange-500">
-              {streak}
+            <p className="text-3xl font-bold text-white/90 mb-1">kg CO₂</p>
+            <p className="text-lg text-white/70">
+              = {trees.toFixed(1)} trees planted 🌳
             </p>
-            <p className="text-lg font-semibold text-orange-400">🔥 days</p>
-            <p className="mt-1 text-xs text-gray-400">consecutive biking days</p>
           </div>
         </div>
 
-        {/* Progress Bar Card */}
-        <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-          <div className="mb-3 flex items-center justify-between">
-            <div>
-              <p className="text-sm font-semibold text-gray-700">
-                Progress to {MILESTONE_KG}kg Milestone
-              </p>
-              <p className="text-xs text-gray-400">
-                {totalCO2.toFixed(2)} kg / {MILESTONE_KG} kg
-              </p>
+        {/* Secondary Stats Grid */}
+        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {/* Streak Card */}
+          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+            <p className="text-sm font-medium text-gray-500">Current Streak</p>
+            <div className="mt-2 flex items-baseline gap-2">
+              <p className="text-5xl font-extrabold text-orange-500">{streak}</p>
+              <p className="text-2xl">🔥</p>
             </div>
-            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-              {progressPct.toFixed(1)}%
-            </span>
-          </div>
-          <div className="h-4 overflow-hidden rounded-full bg-gray-100">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-700"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-          {progressPct >= 100 && (
-            <p className="mt-2 text-sm font-semibold text-green-600">
-              🎉 Milestone reached! Amazing work!
+            <p className="mt-2 text-sm font-medium text-gray-700">
+              {streak === 0 && "Start your streak today!"}
+              {streak === 1 && "Great start! Keep it going!"}
+              {streak === 2 && "Building momentum!"}
+              {streak >= 3 && streak < 7 && "On fire! 🔥"}
+              {streak >= 7 && streak < 14 && "Weekly warrior! 💪"}
+              {streak >= 14 && streak < 30 && "Unstoppable! 🚀"}
+              {streak >= 30 && "Legendary status! 🏆"}
             </p>
-          )}
+          </div>
+
+          {/* Total Rides Card */}
+          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+            <p className="text-sm font-medium text-gray-500">Total Rides</p>
+            <div className="mt-2 flex items-baseline gap-2">
+              <p className="text-5xl font-extrabold text-blue-500">{monthRides.length}</p>
+              <p className="text-2xl">🚴</p>
+            </div>
+            <p className="mt-2 text-sm text-gray-600">
+              this month • {rides.length} all-time
+            </p>
+          </div>
+        </div>
+
+        {/* Smart Milestone Progress */}
+        <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+          {(() => {
+            // Smart milestones: 10, 25, 50, 100, 250, 500kg
+            const milestones = [10, 25, 50, 100, 250, 500];
+            const nextMilestone = milestones.find(m => totalCO2 < m) || 500;
+            const prevMilestone = milestones.filter(m => totalCO2 >= m).pop() || 0;
+            const progressToNext = ((totalCO2 - prevMilestone) / (nextMilestone - prevMilestone)) * 100;
+            const remaining = nextMilestone - totalCO2;
+
+            return (
+              <>
+                <div className="mb-3 flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Next Milestone: {nextMilestone}kg
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {remaining.toFixed(1)}kg to go
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                    {progressToNext.toFixed(0)}%
+                  </span>
+                </div>
+                <div className="h-3 overflow-hidden rounded-full bg-gray-100">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-700"
+                    style={{ width: `${Math.min(progressToNext, 100)}%` }}
+                  />
+                </div>
+                {prevMilestone > 0 && (
+                  <p className="mt-2 text-sm text-green-600">
+                    ✅ {prevMilestone}kg milestone unlocked!
+                  </p>
+                )}
+              </>
+            );
+          })()}
         </div>
 
         {/* Badges Section */}
         <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
           <h3 className="mb-4 text-base font-semibold text-gray-900">Your Badges</h3>
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {BADGES.map((badge) => {
               const earned = badgesUnlocked.some((b) => b.id === badge.id);
+              const remaining = Math.max(0, badge.threshold - allTimeCO2);
+              const progress = Math.min((allTimeCO2 / badge.threshold) * 100, 100);
+              
               return (
                 <div
                   key={badge.id}
-                  className={`flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold transition-all ${
+                  className={`rounded-2xl p-4 transition-all ${
                     earned
-                      ? "bg-green-100 text-green-800 shadow-sm ring-1 ring-green-200"
-                      : "bg-gray-100 text-gray-400 grayscale opacity-50"
+                      ? "bg-gradient-to-br from-green-50 to-emerald-50 ring-2 ring-green-200 shadow-sm"
+                      : "bg-gray-50 ring-1 ring-gray-200"
                   }`}
-                  title={earned ? `Earned: ${badge.name}` : `Locked — reach ${badge.threshold} kg CO₂`}
                 >
-                  <span className="text-xl">{badge.emoji}</span>
-                  <span>{badge.name}</span>
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-2xl ${!earned && 'grayscale opacity-40'}`}>
+                        {badge.emoji}
+                      </span>
+                      <div>
+                        <p className={`text-sm font-semibold ${earned ? 'text-green-800' : 'text-gray-600'}`}>
+                          {badge.name}
+                        </p>
+                        <p className="text-xs text-gray-500">{badge.threshold}kg goal</p>
+                      </div>
+                    </div>
+                    {earned && (
+                      <span className="text-green-600 text-xl">✓</span>
+                    )}
+                  </div>
                   {!earned && (
-                    <span className="ml-1 text-xs font-normal opacity-70">
-                      {badge.threshold} kg
-                    </span>
+                    <>
+                      <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden mb-1">
+                        <div 
+                          className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-500"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        {remaining.toFixed(1)}kg to go
+                      </p>
+                    </>
                   )}
                 </div>
               );
