@@ -32,7 +32,7 @@ export default function LogRideModal({ onClose, onSubmit }: LogRideModalProps) {
       <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-xl">
         <h2 className="mb-1 text-2xl font-bold text-gray-900">Log a Ride 🚴</h2>
         <p className="mb-6 text-sm text-gray-500">
-          Enter the distance you rode today.
+          Enter your one-way commute distance (we'll count the round trip).
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -64,9 +64,9 @@ export default function LogRideModal({ onClose, onSubmit }: LogRideModalProps) {
 
           {distance && !isNaN(parseFloat(distance)) && parseFloat(distance) > 0 && (
             <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700">
-              🌿 CO₂ saved:{" "}
+              🌿 Round trip: {(parseFloat(distance) * 2).toFixed(1)} km • CO₂ saved:{" "}
               <span className="font-semibold">
-                {(parseFloat(distance) * CO2_PER_KM).toFixed(3)} kg
+                {(parseFloat(distance) * 2 * CO2_PER_KM).toFixed(3)} kg
               </span>
             </div>
           )}

@@ -63,8 +63,8 @@ const INITIAL_RIDES: Ride[] = [
       d.setDate(d.getDate() - 2);
       return d.toISOString().slice(0, 10);
     })(),
-    distance: 14,
-    co2: parseFloat((14 * CO2_PER_KM).toFixed(3)),
+    distance: 28, // 14 km one-way × 2 for round trip
+    co2: parseFloat((28 * CO2_PER_KM).toFixed(3)),
   },
   {
     id: "seed-2",
@@ -73,8 +73,8 @@ const INITIAL_RIDES: Ride[] = [
       d.setDate(d.getDate() - 1);
       return d.toISOString().slice(0, 10);
     })(),
-    distance: 10,
-    co2: parseFloat((10 * CO2_PER_KM).toFixed(3)),
+    distance: 20, // 10 km one-way × 2 for round trip
+    co2: parseFloat((20 * CO2_PER_KM).toFixed(3)),
   },
 ];
 
@@ -96,12 +96,13 @@ export default function Dashboard() {
   const streak = calcStreak(rides);
   const progressPct = Math.min((totalCO2 / MILESTONE_KG) * 100, 100);
 
-  function handleLogRide(distance: number) {
-    const co2 = parseFloat((distance * CO2_PER_KM).toFixed(3));
+  function handleLogRide(distanceOneWay: number) {
+    const totalDistance = distanceOneWay * 2; // Round trip
+    const co2 = parseFloat((totalDistance * CO2_PER_KM).toFixed(3));
     const newRide: Ride = {
       id: crypto.randomUUID(),
       date: todayISO(),
-      distance,
+      distance: totalDistance,
       co2,
     };
     const updatedRides = [newRide, ...rides];
