@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { CO2_PER_KM, KG_CO2_PER_TREE, MILESTONE_KG, BADGES } from "@/lib/constants";
 import LogRideModal from "./LogRideModal";
 import BadgeModal from "./BadgeModal";
+import ImpactCard from "./ImpactCard";
+import TransparencyModal from "./TransparencyModal";
 
 interface Ride {
   id: string;
@@ -80,11 +83,15 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [badgesUnlocked, setBadgesUnlocked] = useState<Badge[]>([]);
   const [pendingBadges, setPendingBadges] = useState<Badge[]>([]);
+  const [showImpactCard, setShowImpactCard] = useState(false);
+  const [showTransparency, setShowTransparency] = useState(false);
 
   const currentMonth = todayISO().slice(0, 7); // "YYYY-MM"
   const monthRides = rides.filter((r) => r.date.startsWith(currentMonth));
 
   const totalCO2 = monthRides.reduce((sum, r) => sum + r.co2, 0);
+  const allTimeCO2 = rides.reduce((sum, r) => sum + r.co2, 0);
+  const allTimeTrees = allTimeCO2 / KG_CO2_PER_TREE;
   const trees = totalCO2 / KG_CO2_PER_TREE;
   const streak = calcStreak(rides);
   const progressPct = Math.min((totalCO2 / MILESTONE_KG) * 100, 100);
@@ -127,6 +134,12 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <Link
+              href="/leaderboard"
+              className="rounded-xl bg-green-50 px-3 py-1.5 text-sm font-medium text-green-700 transition hover:bg-green-100"
+            >
+              🏆 Leaderboard
+            </Link>
             <div className="h-9 w-9 rounded-full bg-green-500 flex items-center justify-center text-sm font-bold text-white">
               A
             </div>
@@ -137,18 +150,36 @@ export default function Dashboard() {
 
       <main className="mx-auto max-w-4xl px-6 py-8">
         {/* Greeting */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">
-            Hey Anna! 👋
-          </h2>
-          <p className="text-gray-500">Here&apos;s your impact this month.</p>
+        <div className="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Hey Anna! 👋
+            </h2>
+            <p className="text-gray-500">Here&apos;s your impact this month.</p>
+          </div>
+          <button
+            onClick={() => setShowImpactCard(true)}
+            className="shrink-0 rounded-xl bg-green-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-green-600 active:scale-95"
+          >
+            🌟 Share My Impact
+          </button>
         </div>
 
         {/* Stats Grid */}
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
           {/* CO₂ Card */}
           <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:col-span-1">
-            <p className="text-sm font-medium text-gray-500">CO₂ Saved</p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-gray-500">CO₂ Saved</p>
+              <button
+                onClick={() => setShowTransparency(true)}
+                className="text-xs text-gray-400 transition hover:text-green-600"
+                title="How is this calculated?"
+                aria-label="How is this calculated?"
+              >
+                ℹ️ How?
+              </button>
+            </div>
             <p className="mt-1 text-4xl font-extrabold text-green-600">
               {totalCO2.toFixed(2)}
             </p>
@@ -285,6 +316,20 @@ export default function Dashboard() {
           onClose={() => setShowModal(false)}
           onSubmit={handleLogRide}
         />
+      )}
+
+      {showImpactCard && (
+        <ImpactCard
+          totalRides={rides.length}
+          totalCO2={allTimeCO2}
+          trees={allTimeTrees}
+          streak={streak}
+          onClose={() => setShowImpactCard(false)}
+        />
+      )}
+
+      {showTransparency && (
+        <TransparencyModal onClose={() => setShowTransparency(false)} />
       )}
 
       {pendingBadges.length > 0 && (
