@@ -188,7 +188,6 @@ export default function Dashboard() {
             {/* Metrics as Text */}
             <div className="space-y-2 text-white/90 text-lg">
               <p>= {trees.toFixed(1)} trees planted 🌳</p>
-              <p>= {Math.round(totalCO2 / 250)} flights offset ✈️</p>
               <p>= {monthRides.length} rides this month 🚴</p>
             </div>
           </div>
