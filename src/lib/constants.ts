@@ -6,3 +6,12 @@ export const KG_CO2_PER_TREE = 22;
 
 /** Target CO₂ milestone in kg */
 export const MILESTONE_KG = 500;
+
+/** Badges awarded for cumulative CO₂ saved (all-time) */
+export const BADGES = [
+  { id: "seedling", emoji: "🌱", name: "Seedling", threshold: 100 },
+  { id: "tree-planter", emoji: "🌳", name: "Tree Planter", threshold: 500 },
+  { id: "forest-guardian", emoji: "🌲", name: "Forest Guardian", threshold: 1000 },
+] as const;
+
+export type BadgeId = (typeof BADGES)[number]["id"];

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { CO2_PER_KM, KG_CO2_PER_TREE, MILESTONE_KG } from "@/lib/constants";
+import { CO2_PER_KM, KG_CO2_PER_TREE, MILESTONE_KG, BADGES } from "@/lib/constants";
 import LogRideModal from "./LogRideModal";
+import BadgeModal from "./BadgeModal";
 
 interface Ride {
   id: string;
@@ -10,6 +11,8 @@ interface Ride {
   distance: number;
   co2: number;
 }
+
+type Badge = (typeof BADGES)[number];
 
 function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
@@ -75,6 +78,8 @@ const INITIAL_RIDES: Ride[] = [
 export default function Dashboard() {
   const [rides, setRides] = useState<Ride[]>(INITIAL_RIDES);
   const [showModal, setShowModal] = useState(false);
+  const [badgesUnlocked, setBadgesUnlocked] = useState<Badge[]>([]);
+  const [pendingBadges, setPendingBadges] = useState<Badge[]>([]);
 
   const currentMonth = todayISO().slice(0, 7); // "YYYY-MM"
   const monthRides = rides.filter((r) => r.date.startsWith(currentMonth));
@@ -92,7 +97,16 @@ export default function Dashboard() {
       distance,
       co2,
     };
-    setRides((prev) => [newRide, ...prev]);
+    const updatedRides = [newRide, ...rides];
+    const allTimeCO2 = rides.reduce((sum, r) => sum + r.co2, 0) + co2;
+    const newlyEarned = BADGES.filter(
+      (b) => allTimeCO2 >= b.threshold && !badgesUnlocked.some((ub) => ub.id === b.id)
+    );
+    setRides(updatedRides);
+    if (newlyEarned.length > 0) {
+      setBadgesUnlocked((prev) => [...prev, ...newlyEarned]);
+      setPendingBadges((prev) => [...prev, ...newlyEarned]);
+    }
     setShowModal(false);
   }
 
@@ -191,6 +205,35 @@ export default function Dashboard() {
           )}
         </div>
 
+        {/* Badges Section */}
+        <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+          <h3 className="mb-4 text-base font-semibold text-gray-900">Your Badges</h3>
+          <div className="flex flex-wrap gap-3">
+            {BADGES.map((badge) => {
+              const earned = badgesUnlocked.some((b) => b.id === badge.id);
+              return (
+                <div
+                  key={badge.id}
+                  className={`flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold transition-all ${
+                    earned
+                      ? "bg-green-100 text-green-800 shadow-sm ring-1 ring-green-200"
+                      : "bg-gray-100 text-gray-400 grayscale opacity-50"
+                  }`}
+                  title={earned ? `Earned: ${badge.name}` : `Locked — reach ${badge.threshold} kg CO₂`}
+                >
+                  <span className="text-xl">{badge.emoji}</span>
+                  <span>{badge.name}</span>
+                  {!earned && (
+                    <span className="ml-1 text-xs font-normal opacity-70">
+                      {badge.threshold} kg
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Activity List + Log Ride Button */}
         <div className="rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
           <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
@@ -241,6 +284,14 @@ export default function Dashboard() {
         <LogRideModal
           onClose={() => setShowModal(false)}
           onSubmit={handleLogRide}
+        />
+      )}
+
+      {pendingBadges.length > 0 && (
+        <BadgeModal
+          emoji={pendingBadges[0].emoji}
+          name={pendingBadges[0].name}
+          onDismiss={() => setPendingBadges((prev) => prev.slice(1))}
         />
       )}
     </div>
