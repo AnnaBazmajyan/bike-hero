@@ -375,9 +375,9 @@ export default function Dashboard() {
 
       {showImpactCard && (
         <ImpactCard
-          totalRides={rides.length}
-          totalCO2={allTimeCO2}
-          trees={allTimeTrees}
+          totalRides={monthRides.length}
+          totalCO2={totalCO2}
+          trees={trees}
           streak={streak}
           onClose={() => setShowImpactCard(false)}
         />

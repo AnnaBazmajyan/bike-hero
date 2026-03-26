@@ -40,14 +40,14 @@ export default function ImpactCard({
   function handleLinkedInShare() {
     const flights = Math.round(totalCO2 / 250); // Cologne-Berlin flight ~250kg CO₂
     
-    const text = `🚴 MY CLIMATE IMPACT 2026 🌍
+    const text = `🚴 MY CLIMATE IMPACT THIS MONTH 🌍
 
-I saved ${totalCO2.toFixed(1)}kg of CO₂ by biking to work!
+I saved ${totalCO2.toFixed(1)}kg of CO₂ by biking to work this month!
 
 That's equivalent to:
-🌳 ${trees.toFixed(0)} trees planted
-✈️ ${flights} flights offset
-🚴 ${totalRides} rides completed
+🌳 ${trees.toFixed(1)} trees planted
+✈️ ${flights} flight${flights !== 1 ? 's' : ''} offset
+🚴 ${totalRides} ride${totalRides !== 1 ? 's' : ''} completed
 🔥 ${streak} day streak!
 
 Small changes add up. Who's ready to join the movement?
@@ -79,7 +79,7 @@ Calculate your impact: https://bike-hero.vercel.app`;
             <div className="text-white text-center">
               <div className="text-4xl mb-2">🚴</div>
               <h2 className="text-2xl font-bold mb-1">MY CLIMATE IMPACT</h2>
-              <div className="text-xs opacity-90">2026</div>
+              <div className="text-xs opacity-90">This Month</div>
             </div>
           </div>
 
