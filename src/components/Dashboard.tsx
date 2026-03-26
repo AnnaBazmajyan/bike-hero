@@ -199,9 +199,9 @@ export default function Dashboard() {
           {/* Share Button */}
           <button
             onClick={() => setShowImpactCard(true)}
-            className="w-full rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 px-4 py-3 text-sm font-semibold text-white transition transform hover:-translate-y-0.5"
+            className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 px-4 py-3 text-sm font-bold text-white shadow-lg transition transform hover:-translate-y-0.5"
           >
-            🌟 Share My Impact
+            Share My Impact 📱
           </button>
         </div>
 
