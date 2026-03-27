@@ -135,12 +135,6 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Link
-              href="/leaderboard"
-              className="rounded-xl bg-green-50 px-3 py-1.5 text-sm font-medium text-green-700 transition hover:bg-green-100"
-            >
-              🏆 Leaderboard
-            </Link>
             <div className="h-9 w-9 rounded-full bg-green-500 flex items-center justify-center text-sm font-bold text-white">
               A
             </div>
@@ -158,26 +152,34 @@ export default function Dashboard() {
             </h2>
             <p className="text-gray-500">Here&apos;s your impact this month.</p>
           </div>
-          <button
-            onClick={() => setShowImpactCard(true)}
+          <Link
+            href="/leaderboard"
             className="shrink-0 rounded-xl bg-white hover:bg-gray-50 px-4 py-2 text-sm font-bold text-green-600 shadow-lg ring-2 ring-green-500/20 transition transform hover:-translate-y-0.5"
           >
-            Share My Impact 📱
-          </button>
+            🏆 Leaderboard
+          </Link>
         </div>
 
         {/* Hero CO₂ Card */}
         <div className="mb-6 rounded-3xl bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 p-8 shadow-xl">
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm font-medium text-white/90">CO₂ Saved This Month</p>
-            <button
-              onClick={() => setShowTransparency(true)}
-              className="text-xs text-white/70 transition hover:text-white"
-              title="How is this calculated?"
-              aria-label="How is this calculated?"
-            >
-              ℹ️ How?
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowTransparency(true)}
+                className="text-xs text-white/70 transition hover:text-white"
+                title="How is this calculated?"
+                aria-label="How is this calculated?"
+              >
+                ℹ️ How?
+              </button>
+              <button
+                onClick={() => setShowImpactCard(true)}
+                className="rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 text-sm font-bold text-white shadow-lg transition transform hover:-translate-y-0.5"
+              >
+                Share My Impact 📱
+              </button>
+            </div>
           </div>
           <div className="text-center">
             <p className="text-7xl font-extrabold text-white mb-2">
